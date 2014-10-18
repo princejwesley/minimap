@@ -1,4 +1,4 @@
 minimap
 =======
 
-A preview of the full webpage
+A preview of the full web page (Under development) 
