@@ -1,0 +1,26 @@
+{
+    "name" : "minimap",
+    "version": "1.0.0",
+    "title": "A preview of full web page",
+    "description" : "A preview of full web page",
+    "author": {
+    	"name" : "Prince John Wesley",
+    	"email" : "princejohnwesley@gmail.com",
+    	"url" : "http://www.toolitup.com"
+    },
+    "licenses": [
+        {
+            "type" : "MIT",
+            "url" : "https://github.com/princejwesley/minimap/blob/master/LICENSE"
+        }
+    ],
+    "dependencies" : {
+        "jquery": ">=1.8"
+    },
+    "homepage" : "https://github.com/princejwesley/minimap",
+    "docs" : "https://github.com/princejwesley/minimap",
+    "demo" : "http://www.toolitup.com/minimap.html",
+    "keywords" : ["minimap", "preview", "page-preview"],
+    "bugs" : "https://github.com/princejwesley/minimap/issues"
+
+}
