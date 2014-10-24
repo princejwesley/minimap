@@ -56,10 +56,11 @@ SOFTWARE.
 
         var onResizeHandler = function(e) {
             var s = scale();
-            var sc = 'scaleX(' + s.x + ') scaleY('+ s.y + ')';
-            var offset = $window.height() * settings.offsetHeightRatio  + (region.outerHeight(true) - region.height());
+            var sc = 'scale(' + s.x + ','+ s.y + ')';
+            var offsetHeight = (minimap.outerHeight(true) - minimap.height()) / 2;
+            var offset = $window.height() * settings.offsetHeightRatio;
 
-            var top = minimap.height() * (s.y - 1) / 2 + offset;
+            var top = (minimap.height()) * (s.y - 1) / 2 - offsetHeight + offset;
             var right = minimap.width() * (s.x - 1) / 2;
             var width = $window.width() * (1/s.x) * settings.widthRatio;
             var height = $window.height() * (1/s.y) * settings.heightRatio;
@@ -79,24 +80,23 @@ SOFTWARE.
             region.css({
                 width : $window.width() * s.x,
                 height : $window.height() * s.y,
-                top : $window.scrollTop() * s.y + offset + 2 + 'px'
+                top : $window.scrollTop() * s.y + offset - offsetHeight + (region.outerHeight(true) - region.height()) / 2 + 'px'
             });
 
         };
 
         var onScrollHandler = function(e) {
             var s = scale();
-            var offset = $window.height() * settings.offsetHeightRatio  + (region.outerHeight(true) - region.height());
+            var offset = $window.height() * settings.offsetHeightRatio;
             region.css({
-                top : $window.scrollTop() * s.y + offset + 2 + 'px'
+                top : ($window.scrollTop()) * s.y + offset +  'px'
             });
-
         };
 
         var scrollTop = function(e) {
             var s = scale();
-            var offset = $window.height() * settings.offsetHeightRatio + (region.outerHeight(true) - region.height());
-            minimap.scrollTop((e.clientY - offset - 2)/s.y);
+            var offset = $window.height() * settings.offsetHeightRatio;
+            minimap.scrollTop((e.clientY - offset) / s.y);
         };
 
         var mousedown = false;
