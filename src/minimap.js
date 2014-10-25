@@ -32,12 +32,15 @@ SOFTWARE.
         var defaults = {
             heightRatio : 0.6,
             widthRatio : 0.1,
-            offsetHeightRatio : 0.035
-
+            offsetHeightRatio : 0.035,
+            offsetWidthRatio : 0.035,
+            position : "right",
+            touch: true,
         };
         var settings = $.extend({}, defaults, options);
+        var position = ["right", "left"];
 
-        var miniElement = this.clone();
+        var miniElement = minimap.clone();
         miniElement.addClass('minimap noselect');
         // remove events & customized cursors
         miniElement.children().each(function() {$(this).css({'pointer-events': 'none'});});
@@ -58,30 +61,38 @@ SOFTWARE.
             var s = scale();
             var sc = 'scale(' + s.x + ','+ s.y + ')';
             var offsetHeight = (minimap.outerHeight(true) - minimap.height()) / 2;
-            var offset = $window.height() * settings.offsetHeightRatio;
+            var offsetTop = $window.height() * settings.offsetHeightRatio;
 
-            var top = (minimap.height()) * (s.y - 1) / 2 - offsetHeight + offset;
-            var right = minimap.width() * (s.x - 1) / 2;
+            var offsetWidth = (minimap.outerWidth(true) - minimap.width()) / 2;
+            var offsetLeftRight = $window.width() * settings.offsetWidthRatio;
+
+            var top = minimap.height() * (s.y - 1) / 2 - offsetHeight + offsetTop;
+            var leftRight = minimap.width() * (s.x - 1) / 2 - offsetWidth + offsetLeftRight;
             var width = $window.width() * (1/s.x) * settings.widthRatio;
             var height = $window.height() * (1/s.y) * settings.heightRatio;
 
-            miniElement.css({
+            var css = {
                 '-webkit-transform': sc,
                 '-moz-transform': sc,
                 '-ms-transform': sc,
                 '-o-transform': sc,
                 'transform': sc,
                 'top' : top,
-                'right' : right,
                 'width' : width,
                 'height' : height
-            });
+            };
+            css[settings.position] = leftRight;
 
-            region.css({
+            miniElement.css(css);
+
+            var cssRegion = {
                 width : $window.width() * s.x,
                 height : $window.height() * s.y,
-                top : $window.scrollTop() * s.y + offset - offsetHeight + (region.outerHeight(true) - region.height()) / 2 + 'px'
-            });
+                top : $window.scrollTop() * s.y + offsetTop - offsetHeight + (region.outerHeight(true) - region.height()) / 2 + 'px'
+            };
+            cssRegion[settings.position] = offsetLeftRight - offsetWidth/2 + (region.outerWidth(true) - region.width()) / 2 + 'px';
+
+            region.css(cssRegion);
 
         };
 
@@ -134,6 +145,59 @@ SOFTWARE.
         $(miniElement).on('mousemove', onMousemoveHandler);
         $(miniElement).on('click', onClickHandler);
 
+        var lastTouchType = '';
+        var touchHandler = function(e) {
+            var touches = e.changedTouches;
+
+            // Ignore multi-touch
+            if (touches.length > 1) return;
+
+            var touch = touches[0];
+            var events = ["touchstart", "touchmove", "touchend"];
+            var mouseEvents = ["mousedown", "mousemove", "mouseup"];
+            var ev = events.indexOf(e.type);
+
+            if (ev === -1) return;
+
+            var type = mouseEvents[ev];
+            if (e.type === events[2] && lastTouchType === events[0]) {
+                type = "click";
+            }
+
+
+            var simulatedEvent = document.createEvent("MouseEvent");
+            simulatedEvent.initMouseEvent(type, true, true, window, 1,
+                touch.screenX, touch.screenY,
+                touch.clientX, touch.clientY, false,
+                false, false, false, 0, null);
+            touch.target.dispatchEvent(simulatedEvent);
+            e.preventDefault();
+            lastTouchType = e.type;
+        };
+
+        if (settings.touch) {
+
+            document.addEventListener("touchstart", touchHandler, true);
+            document.addEventListener("touchmove", touchHandler, true);
+            document.addEventListener("touchend", touchHandler, true);
+            document.addEventListener("touchcancel", touchHandler, true);
+
+        }
+
+        var setPosition = function(pos) {
+            if(position.indexOf(pos) !== -1 && settings.position !== pos) {
+                var css = {};
+                css[settings.position] = '';
+                settings.position = pos;
+                onResizeHandler();
+                region.css(css);
+                miniElement.css(css);
+            }
+        };
+
+        return $.extend({}, this, {
+            "setPosition": setPosition,
+        });
 
     };
 }(jQuery));
