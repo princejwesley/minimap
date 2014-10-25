@@ -107,7 +107,7 @@ SOFTWARE.
         var scrollTop = function(e) {
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
-            minimap.scrollTop((e.clientY - offset) / s.y);
+            $window.scrollTop((e.clientY - offset) / s.y);
         };
 
         var mousedown = false;
