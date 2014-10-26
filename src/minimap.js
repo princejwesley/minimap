@@ -36,6 +36,8 @@ SOFTWARE.
             offsetWidthRatio : 0.035,
             position : "right",
             touch: true,
+            smoothScroll: true,
+            smoothScrollDelay: 200
         };
         var settings = $.extend({}, defaults, options);
         var position = ["right", "left"];
@@ -90,10 +92,8 @@ SOFTWARE.
                 height : $window.height() * s.y,
                 top : $window.scrollTop() * s.y + offsetTop - offsetHeight + (region.outerHeight(true) - region.height()) / 2 + 'px'
             };
-            cssRegion[settings.position] = offsetLeftRight - offsetWidth/2 + (region.outerWidth(true) - region.width()) / 2 + 'px';
-
+            cssRegion[settings.position] = offsetLeftRight - offsetWidth / 2 + (region.outerWidth(true) - region.width()) / 2 + 'px';
             region.css(cssRegion);
-
         };
 
         var onScrollHandler = function(e) {
@@ -107,17 +107,55 @@ SOFTWARE.
         var scrollTop = function(e) {
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
-            $window.scrollTop((e.clientY - offset) / s.y);
+            var target = (e.clientY - offset) / s.y;
+            if(e.type === 'click' && settings.smoothScroll) {
+                var current = $window.scrollTop();
+                var maxTarget = minimap.outerHeight(true);
+                target = Math.max(target, Math.min(target, maxTarget));
+                var direction = target > current;
+                var delay = settings.smoothScrollDelay;
+                var distance = Math.abs(current - target);
+                var r = delay / distance;
+                var unitScroll = 1;
+                var unitDelay = 4;
+                if(r >= 4) {
+                    unitDelay = parseInt(unitScroll);
+                } else if(r >= 1) {
+                    unitScroll = parseInt(r) * 4;
+                } else {
+                    unitScroll = (4 / r);
+                }
+
+                var next = current;
+                var count = parseInt(distance / unitScroll);
+                onSmoothScroll = true;
+
+                // linear translate
+                var smoothScroll = function() {
+                    next = next + (direction ? unitScroll : -unitScroll);
+                    if(--count <= 0) {
+                        clearInterval(timer);
+                        onSmoothScroll = false;
+                        next = target;
+                    }
+                    $window.scrollTop(next);
+                };
+                var timer = window.setInterval(smoothScroll, unitDelay);
+            } else {
+                $window.scrollTop(target);
+            }
+            e.stopPropagation();
         };
 
         var mousedown = false;
+        var onSmoothScroll = false;
         var onMouseupHandler = function(e) {
             minimap.removeClass('noselect');
             mousedown = false;
         };
 
         var onMousemoveHandler = function(e) {
-            if(!mousedown) return;
+            if(!mousedown || onSmoothScroll) return;
             scrollTop(e);
         };
 
