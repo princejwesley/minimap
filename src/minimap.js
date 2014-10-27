@@ -28,6 +28,7 @@ SOFTWARE.
     $.fn.minimap = function(options) {
         var minimap = this;
         var $window = $(window);
+        var $body = $($('body')[0]);
 
         var defaults = {
             heightRatio : 0.6,
@@ -36,7 +37,7 @@ SOFTWARE.
             offsetWidthRatio : 0.035,
             position : "right",
             touch: true,
-            smoothScroll: true,
+            smoothScroll: false,
             smoothScrollDelay: 200
         };
         var settings = $.extend({}, defaults, options);
@@ -99,9 +100,21 @@ SOFTWARE.
         var onScrollHandler = function(e) {
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
-            region.css({
-                top : ($window.scrollTop()) * s.y + offset +  'px'
-            });
+            var pos = ($window.scrollTop()) * s.y + offset;
+            var top = offset + minimap.offset().top * s.y;
+            var bottom = minimap.outerHeight(true) * s.y + offset;
+            var regionHeight = region.outerHeight(true);
+
+            if(pos + regionHeight < top || pos >  bottom) {
+                region.css({
+                    display: 'none',
+                });
+            } else {
+                region.css({
+                    top : pos - top + offset + 'px',
+                    display : 'block'
+                });
+            }
         };
 
         var scrollTop = function(e) {
@@ -150,7 +163,7 @@ SOFTWARE.
         var mousedown = false;
         var onSmoothScroll = false;
         var onMouseupHandler = function(e) {
-            minimap.removeClass('noselect');
+            $body.removeClass('noselect');
             mousedown = false;
         };
 
@@ -166,7 +179,7 @@ SOFTWARE.
 
         var onMousedownHandler = function(e) {
             mousedown = true;
-            minimap.addClass('noselect');
+            $body.addClass('noselect');
         };
 
         onResizeHandler();
