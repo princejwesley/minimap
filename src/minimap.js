@@ -32,7 +32,7 @@ SOFTWARE.
 
         var defaults = {
             heightRatio : 0.6,
-            widthRatio : 0.1,
+            widthRatio : 0.05,
             offsetHeightRatio : 0.035,
             offsetWidthRatio : 0.035,
             position : "right",
@@ -100,7 +100,7 @@ SOFTWARE.
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
             var pos = ($window.scrollTop()) * s.y;
-            var top =  (minimap.offset().top + (minimap.outerHeight(true) - minimap.height())/2) * s.y;
+            var top =  minimap.offset().top * s.y;
             var regionHeight = region.outerHeight(true);
             var bottom = minimap.outerHeight(true) * s.y + top;// - regionHeight;
 
@@ -247,6 +247,7 @@ SOFTWARE.
 
         return $.extend({}, this, {
             "setPosition": setPosition,
+            "repaint": repaint
         });
 
     };
