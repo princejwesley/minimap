@@ -67,8 +67,8 @@ SOFTWARE.
 
             var offsetLeftRight = $window.width() * settings.offsetWidthRatio;
 
-            var top = minimap.outerHeight(true) * (s.y - 1) / 2 + offsetTop;
-            var leftRight = minimap.outerWidth(true) * (s.x - 1) / 2  + offsetLeftRight;
+            var top = (minimap.outerHeight() - parseInt(minimap.css('marginTop'))) * (s.y - 1) / 2 + offsetTop;
+            var leftRight = minimap.outerWidth() * (s.x - 1) / 2  + offsetLeftRight;
 
             var width = $window.width() * (1/s.x) * settings.widthRatio;
             var height = $window.height() * (1/s.y) * settings.heightRatio;
@@ -81,18 +81,23 @@ SOFTWARE.
                 'transform': sc,
                 'top' : top,
                 'width' : width,
-                'height' : height
+                'height' : height,
+                'margin' : '0px',
+                'padding': '0px'
             };
             css[settings.position] = leftRight;
 
             miniElement.css(css);
 
+            var regionTop =  (minimap.offset().top + parseInt(minimap.css('marginTop'))) * s.y;
             var cssRegion = {
-                width : $window.width() * s.x,
+                width : miniElement.width() * s.x,
                 height : $window.height() * s.y,
-                top : $window.scrollTop() * s.y + offsetTop + (minimap.outerHeight(true) - minimap.height()) * settings.heightRatio / 2 - (region.outerHeight(true) - region.height()) / 2 + 'px'
+                margin : '0px',
+                padding : '0px',
+                top : $window.scrollTop() * s.y + regionTop + offsetTop + 'px'
             };
-            cssRegion[settings.position] = offsetLeftRight - (region.outerWidth(true) - region.width()) / 2 + 'px';
+            cssRegion[settings.position] = offsetLeftRight + 'px';
             region.css(cssRegion);
         };
 
@@ -100,7 +105,7 @@ SOFTWARE.
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
             var pos = ($window.scrollTop()) * s.y;
-            var top =  minimap.offset().top * s.y;
+            var top =  (minimap.offset().top + parseInt(minimap.css('marginTop'))) * s.y;
             var regionHeight = region.outerHeight(true);
             var bottom = minimap.outerHeight(true) * s.y + top;// - regionHeight;
 
