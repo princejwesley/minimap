@@ -247,7 +247,6 @@ SOFTWARE.
 
         return $.extend({}, this, {
             "setPosition": setPosition,
-            "repaint": repaint
         });
 
     };
