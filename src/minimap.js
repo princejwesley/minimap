@@ -102,8 +102,8 @@ SOFTWARE.
             var offset = $window.height() * settings.offsetHeightRatio;
             var pos = ($window.scrollTop()) * s.y + offset;
             var top = offset + minimap.offset().top * s.y;
-            var bottom = minimap.outerHeight(true) * s.y + offset;
             var regionHeight = region.outerHeight(true);
+            var bottom = minimap.outerHeight(true) * s.y + top;// - regionHeight;
 
             if(pos + regionHeight < top || pos >  bottom) {
                 region.css({
@@ -120,7 +120,7 @@ SOFTWARE.
         var scrollTop = function(e) {
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
-            var target = (e.clientY - offset) / s.y;
+            var target = (e.clientY - offset) / s.y + minimap.offset().top;
             if(e.type === 'click' && settings.smoothScroll) {
                 var current = $window.scrollTop();
                 var maxTarget = minimap.outerHeight(true);
