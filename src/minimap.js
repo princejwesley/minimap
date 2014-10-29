@@ -58,12 +58,12 @@ SOFTWARE.
                     break;
                 case 'offsetHeightRatio':
                     var offsetHeightRatio = value;
-                    if(!offsetHeightRatio || offsetHeightRatio <= 0.0 || offsetHeightRatio > 0.9)
+                    if(!offsetHeightRatio || offsetHeightRatio < 0.0 || offsetHeightRatio > 0.9)
                         throw "Invalid offsetHeightRatio: " + offsetHeightRatio;
                     break;
                 case 'offsetWidthRatio':
                     var offsetWidthRatio = value;
-                    if(!offsetWidthRatio || offsetWidthRatio <= 0.0 || offsetWidthRatio > 0.9)
+                    if(!offsetWidthRatio || offsetWidthRatio < 0.0 || offsetWidthRatio > 0.9)
                         throw "Invalid offsetWidthRatio: " + offsetWidthRatio;
                     break;
                 case 'position':
@@ -112,7 +112,7 @@ SOFTWARE.
 
             var offsetLeftRight = $window.width() * settings.offsetWidthRatio;
 
-            var top = (minimap.outerHeight() - parseInt(minimap.css('marginTop'))) * (s.y - 1) / 2 + offsetTop;
+            var top = (minimap.outerHeight() - parseInt(minimap.css('marginTop'))) * (s.y - 1) / 2 + offsetTop + ((minimap.offset().top - $body.offset().top)) * s.y;
             var leftRight = minimap.outerWidth() * (s.x - 1) / 2  + offsetLeftRight;
 
             var width = $window.width() * (1/s.x) * settings.widthRatio;
@@ -134,13 +134,13 @@ SOFTWARE.
 
             miniElement.css(css);
 
-            var regionTop =  (minimap.offset().top + parseInt(minimap.css('marginTop'))) * s.y;
+            var regionTop = 2 * parseInt(minimap.css('marginTop'));
             var cssRegion = {
                 width : miniElement.width() * s.x,
                 height : $window.height() * s.y,
                 margin : '0px',
                 padding : '0px',
-                top : $window.scrollTop() * s.y + regionTop + offsetTop + 'px'
+                top : (regionTop + $window.scrollTop()) * s.y + offsetTop + 'px'
             };
             cssRegion[settings.position] = offsetLeftRight + 'px';
             region.css(cssRegion);
@@ -150,7 +150,8 @@ SOFTWARE.
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
             var pos = ($window.scrollTop()) * s.y;
-            var top =  (minimap.offset().top + parseInt(minimap.css('marginTop'))) * s.y;
+            var offsetTop = (minimap.offset().top - $body.offset().top) * s.y;
+            var top =  offsetTop + parseInt(minimap.css('marginTop')) * s.y;
             var regionHeight = region.outerHeight(true);
             var bottom = minimap.outerHeight(true) * s.y + top;// - regionHeight;
 
@@ -160,7 +161,7 @@ SOFTWARE.
                 });
             } else {
                 region.css({
-                    top : pos + top + offset + 'px',
+                    top : pos + top + offset - offsetTop + 'px',
                     display : 'block'
                 });
             }
