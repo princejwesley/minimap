@@ -29,6 +29,7 @@ SOFTWARE.
         var minimap = this;
         var $window = $(window);
         var $body = $($('body')[0]);
+        var fn = function() {};
 
         var defaults = {
             heightRatio : 0.6,
@@ -38,7 +39,8 @@ SOFTWARE.
             position : "right",
             touch: true,
             smoothScroll: false,
-            smoothScrollDelay: 200
+            smoothScrollDelay: 200,
+            onPreviewChange: fn
         };
         var settings = $.extend({}, defaults, options);
         var position = ["right", "left"];
@@ -79,6 +81,11 @@ SOFTWARE.
                     break;
                 case 'touch':
                 case 'smoothScroll':
+                    break;
+                case 'onPreviewChange':
+                    var fn = value;
+                    if(!fn || !$.isFunction(fn))
+                        throw "Invalid onPreviewChange: " + value;
                     break;
                 default:
                     throw "Invalid validation property: " + prop;
@@ -144,6 +151,8 @@ SOFTWARE.
             };
             cssRegion[settings.position] = offsetLeftRight + 'px';
             region.css(cssRegion);
+
+            settings.onPreviewChange();
         };
 
         var onScrollHandler = function(e) {
