@@ -83,6 +83,16 @@ var previewBody = $('body').minimap();
 1. View port is resized.
 2. Calling setter functions.
 
+## Other functions
+### function show()
+> Show preview
+
+### function hide()
+> Hide preview
+
+### function toggle()
+> Toggle Preview
+
 ### Default Settings
 Mini-map with default values
 ```javascript
@@ -105,6 +115,9 @@ Use the below css classes for customization
 
 > `.miniregion` - Mini-map view area
 
+## Caveats
+1. Browser's `find` gives result in both the page & its preview
+2. Async updates to the dom elements after minimap was created may not reflect in the preview.
 
 ## License
 This plugin is licensed under the [MIT license](https://github.com/princejwesley/minimap/blob/master/LICENSE).

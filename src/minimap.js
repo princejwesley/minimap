@@ -314,6 +314,21 @@ SOFTWARE.
             };
         };
 
+        var show = function() {
+            miniElement.show();
+            region.show();
+        };
+
+        var hide = function() {
+            miniElement.hide();
+            region.hide();
+        };
+
+        var toggle = function() {
+            miniElement.toggle();
+            region.toggle();
+        };
+
         return $.extend({}, this, {
             "setPosition": setPosition,
             "setHeightRatio": setProperty('heightRatio', true),
@@ -322,6 +337,9 @@ SOFTWARE.
             "setOffsetWidthRatio": setProperty('offsetWidthRatio', true),
             "setSmoothScroll" : setProperty('smoothScroll'),
             "setSmoothScrollDelay" : setProperty('smoothScrollDelay'),
+            "show" : show,
+            "hide" : hide,
+            "toggle" : toggle
         });
 
     };
