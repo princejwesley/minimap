@@ -43,6 +43,54 @@ SOFTWARE.
         var settings = $.extend({}, defaults, options);
         var position = ["right", "left"];
 
+        var validateProps = function(prop, value) {
+
+            switch(prop) {
+                case 'heightRatio':
+                    var heightRatio = value;
+                    if(!heightRatio || heightRatio <= 0.0 || heightRatio > 1.0)
+                        throw "Invalid heightRatio: " + heightRatio;
+                    break;
+                case 'widthRatio':
+                    var widthRatio = value;
+                    if(!widthRatio || widthRatio <= 0.0 || widthRatio > 0.5)
+                        throw "Invalid widthRatio: " + widthRatio;
+                    break;
+                case 'offsetHeightRatio':
+                    var offsetHeightRatio = value;
+                    if(!offsetHeightRatio || offsetHeightRatio <= 0.0 || offsetHeightRatio > 0.9)
+                        throw "Invalid offsetHeightRatio: " + offsetHeightRatio;
+                    break;
+                case 'offsetWidthRatio':
+                    var offsetWidthRatio = value;
+                    if(!offsetWidthRatio || offsetWidthRatio <= 0.0 || offsetWidthRatio > 0.9)
+                        throw "Invalid offsetWidthRatio: " + offsetWidthRatio;
+                    break;
+                case 'position':
+                    var p = value.toLowerCase();
+                    var pos = position.indexOf(p);
+                    if(pos === -1) throw "Invalid position: " + settings.position;
+                    settings.position = p;
+                    break;
+                case 'touch':
+                    settings.touch = !!value;
+                    break;
+                case 'smoothScroll':
+                    settings.smoothScroll = !!value;
+                    break;
+                case 'smoothScrollDelay':
+                    var smoothScrollDelay = value;
+                    if(((smoothScrollDelay | 0 ) !== smoothScrollDelay) || smoothScrollDelay < 4)
+                        throw "Invalid smoothScrollDelay(in ms): " + smoothScrollDelay;
+                    break;
+                default:
+                    throw "Invalid validation property: " + prop;
+            }
+        };
+
+        //validate inputs
+        for(var prop in settings) validateProps(prop, settings[prop]);
+
         var miniElement = minimap.clone();
         miniElement.addClass('minimap noselect');
         // remove events & customized cursors
@@ -124,7 +172,7 @@ SOFTWARE.
         var scrollTop = function(e) {
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
-            var target = (e.clientY - offset) / s.y + minimap.offset().top;
+            var target = (e.clientY - offset - parseInt(minimap.css('marginTop'))) / s.y + minimap.offset().top;
             if(e.type === 'click' && settings.smoothScroll) {
                 var current = $window.scrollTop();
                 var maxTarget = minimap.outerHeight(true);
@@ -240,14 +288,13 @@ SOFTWARE.
         }
 
         var setPosition = function(pos) {
-            if(position.indexOf(pos) !== -1 && settings.position !== pos) {
-                var css = {};
-                css[settings.position] = '';
-                settings.position = pos;
-                onResizeHandler();
-                region.css(css);
-                miniElement.css(css);
-            }
+            validateProps('position', pos);
+            var css = {};
+            css[settings.position] = '';
+            settings.position = pos;
+            onResizeHandler();
+            region.css(css);
+            miniElement.css(css);
         };
 
         return $.extend({}, this, {
