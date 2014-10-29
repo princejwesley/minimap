@@ -79,6 +79,7 @@ var previewBody = $('body').minimap();
 ## Callback
 ### function onPreviewChange()
 > `onPreviewChange` callback will be triggered for the below cases:
+
 1. View port is resized.
 2. Calling setter functions.
 

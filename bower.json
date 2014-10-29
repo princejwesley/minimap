@@ -1,0 +1,23 @@
+{
+  "name": "minimap",
+  "version": "1.0.0",
+  "homepage": "https://github.com/princejwesley/minimap",
+  "authors": [
+    "princejwesley <princejohnwesley@gmail.com>"
+  ],
+  "main" : "dist/minimap.min.js",
+  "license": "MIT",
+  "ignore": [
+    "!(dist)"
+  ],
+  "description" : "Minimap - A preview of full web page or its DOM element| a jquery plugin",
+  "dependencies": {
+    "jquery": ">=1.10.2"
+  },
+  "keywords": [
+    "navigation",
+    "preview",
+    "minimap",
+    "mini-map"
+  ]
+}
