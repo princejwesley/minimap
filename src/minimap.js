@@ -72,16 +72,13 @@ SOFTWARE.
                     if(pos === -1) throw "Invalid position: " + settings.position;
                     settings.position = p;
                     break;
-                case 'touch':
-                    settings.touch = !!value;
-                    break;
-                case 'smoothScroll':
-                    settings.smoothScroll = !!value;
-                    break;
                 case 'smoothScrollDelay':
                     var smoothScrollDelay = value;
                     if(((smoothScrollDelay | 0 ) !== smoothScrollDelay) || smoothScrollDelay < 4)
                         throw "Invalid smoothScrollDelay(in ms): " + smoothScrollDelay;
+                    break;
+                case 'touch':
+                case 'smoothScroll':
                     break;
                 default:
                     throw "Invalid validation property: " + prop;
@@ -288,17 +285,33 @@ SOFTWARE.
         }
 
         var setPosition = function(pos) {
+            var oldValue = settings.position;
             validateProps('position', pos);
-            var css = {};
-            css[settings.position] = '';
-            settings.position = pos;
-            onResizeHandler();
-            region.css(css);
-            miniElement.css(css);
+            if(oldValue !== settings.position) {
+                var css = {};
+                css[oldValue] = '';
+                onResizeHandler();
+                region.css(css);
+                miniElement.css(css);
+            }
+        };
+
+        var setProperty = function(propName, redraw) {
+            return function(value) {
+                validateProps(propName, value);
+                settings[propName] = value;
+                if(redraw) onResizeHandler();
+            };
         };
 
         return $.extend({}, this, {
             "setPosition": setPosition,
+            "setHeightRatio": setProperty('heightRatio', true),
+            "setWidthRatio": setProperty('widthRatio', true),
+            "setOffsetHeightRatio": setProperty('offsetHeightRatio', true),
+            "setOffsetWidthRatio": setProperty('offsetWidthRatio', true),
+            "setSmoothScroll" : setProperty('smoothScroll'),
+            "setSmoothScrollDelay" : setProperty('smoothScrollDelay'),
         });
 
     };
