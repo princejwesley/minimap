@@ -22,6 +22,7 @@ Include jQuery and this plugin on a page.
 
 ### Basic Usage
 ```javascript
+//Desired dom element
 var previewBody = $('body').minimap();
 
 ```

@@ -32,8 +32,8 @@ SOFTWARE.
         var fn = function() {};
 
         var defaults = {
-            heightRatio : 0.6,
-            widthRatio : 0.05,
+            heightRatio : 0.8,
+            widthRatio : 0.1,
             offsetHeightRatio : 0.035,
             offsetWidthRatio : 0.035,
             position : "right",
@@ -119,8 +119,8 @@ SOFTWARE.
 
             var offsetLeftRight = $window.width() * settings.offsetWidthRatio;
 
-            var top = (minimap.outerHeight() - parseInt(minimap.css('marginTop'))) * (s.y - 1) / 2 + offsetTop + ((minimap.offset().top - $body.offset().top)) * s.y;
-            var leftRight = minimap.outerWidth() * (s.x - 1) / 2  + offsetLeftRight;
+            var top = minimap.height() * (s.y - 1) / 2 + offsetTop + ((minimap.offset().top)) * s.y;
+            var leftRight = minimap.width() * (s.x - 1) / 2  + offsetLeftRight;
 
             var width = $window.width() * (1/s.x) * settings.widthRatio;
             var height = $window.height() * (1/s.y) * settings.heightRatio;
@@ -135,19 +135,16 @@ SOFTWARE.
                 'width' : width,
                 'height' : height,
                 'margin' : '0px',
-                'padding': '0px'
             };
             css[settings.position] = leftRight;
 
             miniElement.css(css);
 
-            var regionTop = 2 * parseInt(minimap.css('marginTop'));
             var cssRegion = {
                 width : miniElement.width() * s.x,
                 height : $window.height() * s.y,
                 margin : '0px',
-                padding : '0px',
-                top : (regionTop + $window.scrollTop()) * s.y + offsetTop + 'px'
+                top : $window.scrollTop() * s.y + offsetTop - (minimap.offset().top - $body.offset().top) * s.y + 'px'
             };
             cssRegion[settings.position] = offsetLeftRight + 'px';
             region.css(cssRegion);
@@ -157,12 +154,12 @@ SOFTWARE.
 
         var onScrollHandler = function(e) {
             var s = scale();
-            var offset = $window.height() * settings.offsetHeightRatio;
+            var offsetTop = $window.height() * settings.offsetHeightRatio;
             var pos = ($window.scrollTop()) * s.y;
-            var offsetTop = (minimap.offset().top - $body.offset().top) * s.y;
-            var top =  offsetTop + parseInt(minimap.css('marginTop')) * s.y;
             var regionHeight = region.outerHeight(true);
             var bottom = minimap.outerHeight(true) * s.y + top;// - regionHeight;
+
+            console.log('window scrollTop ' + $window.scrollTop());
 
             if(pos + regionHeight < top || pos >  bottom) {
                 region.css({
@@ -170,7 +167,7 @@ SOFTWARE.
                 });
             } else {
                 region.css({
-                    top : pos + top + offset - offsetTop + 'px',
+                    top : pos + offsetTop - (minimap.offset().top - $body.offset().top) * s.y + 'px',
                     display : 'block'
                 });
             }
@@ -179,7 +176,9 @@ SOFTWARE.
         var scrollTop = function(e) {
             var s = scale();
             var offset = $window.height() * settings.offsetHeightRatio;
-            var target = (e.clientY - offset - parseInt(minimap.css('marginTop'))) / s.y + minimap.offset().top;
+            var target = (e.clientY - offset) / s.y - (minimap.offset().top - $body.offset().top);
+
+            console.log('scroll top : ' + target);
             if(e.type === 'click' && settings.smoothScroll) {
                 var current = $window.scrollTop();
                 var maxTarget = minimap.outerHeight(true);
@@ -222,7 +221,6 @@ SOFTWARE.
         var mousedown = false;
         var onSmoothScroll = false;
         var onMouseupHandler = function(e) {
-            $body.removeClass('noselect');
             mousedown = false;
         };
 
@@ -238,7 +236,6 @@ SOFTWARE.
 
         var onMousedownHandler = function(e) {
             mousedown = true;
-            $body.addClass('noselect');
         };
 
         onResizeHandler();
