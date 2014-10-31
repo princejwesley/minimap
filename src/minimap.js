@@ -32,13 +32,13 @@ SOFTWARE.
         var shown = true;
 
         var defaults = {
-            heightRatio : 0.8,
-            widthRatio : 0.1,
+            heightRatio : 0.6,
+            widthRatio : 0.05,
             offsetHeightRatio : 0.035,
             offsetWidthRatio : 0.035,
             position : "right",
             touch: true,
-            smoothScroll: false,
+            smoothScroll: true,
             smoothScrollDelay: 200,
             onPreviewChange: fn
         };
@@ -50,22 +50,22 @@ SOFTWARE.
             switch(prop) {
                 case 'heightRatio':
                     var heightRatio = value;
-                    if(!heightRatio || heightRatio <= 0.0 || heightRatio > 1.0)
+                    if(!$.isNumeric(heightRatio) || heightRatio <= 0.0 || heightRatio > 1.0)
                         throw "Invalid heightRatio: " + heightRatio;
                     break;
                 case 'widthRatio':
                     var widthRatio = value;
-                    if(!widthRatio || widthRatio <= 0.0 || widthRatio > 0.5)
+                    if(!$.isNumeric(widthRatio) || widthRatio <= 0.0 || widthRatio > 0.5)
                         throw "Invalid widthRatio: " + widthRatio;
                     break;
                 case 'offsetHeightRatio':
                     var offsetHeightRatio = value;
-                    if(!offsetHeightRatio || offsetHeightRatio < 0.0 || offsetHeightRatio > 0.9)
+                    if(!$.isNumeric(offsetHeightRatio) || offsetHeightRatio < 0.0 || offsetHeightRatio > 0.9)
                         throw "Invalid offsetHeightRatio: " + offsetHeightRatio;
                     break;
                 case 'offsetWidthRatio':
                     var offsetWidthRatio = value;
-                    if(!offsetWidthRatio || offsetWidthRatio < 0.0 || offsetWidthRatio > 0.9)
+                    if(!$.isNumeric(offsetWidthRatio) || offsetWidthRatio < 0.0 || offsetWidthRatio > 0.9)
                         throw "Invalid offsetWidthRatio: " + offsetWidthRatio;
                     break;
                 case 'position':

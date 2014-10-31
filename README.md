@@ -1,4 +1,4 @@
-[minimap](http://www.toolitup.com/minimap.html) - A jQuery Plugin (under development)
+[minimap](http://www.toolitup.com/minimap.html) - A jQuery Plugin
 ===============
 A preview of the full web page or its DOM element
 #####[Demo Page](http://www.toolitup.com/minimap.html) (TODO)
