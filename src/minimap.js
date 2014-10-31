@@ -28,8 +28,8 @@ SOFTWARE.
     $.fn.minimap = function(options) {
         var minimap = this;
         var $window = $(window);
-        var $body = $($('body')[0]);
         var fn = function() {};
+        var shown = true;
 
         var defaults = {
             heightRatio : 0.8,
@@ -96,14 +96,17 @@ SOFTWARE.
         for(var prop in settings) validateProps(prop, settings[prop]);
 
         var miniElement = minimap.clone();
+
+        miniElement.find('.minimap.noselect').remove();
+        miniElement.find('.miniregion').remove();
         miniElement.addClass('minimap noselect');
         // remove events & customized cursors
         miniElement.children().each(function() {$(this).css({'pointer-events': 'none'});});
 
         var region = $('<div class="miniregion"> </div>');
 
-        $('body').append(region);
-        $('body').append(miniElement);
+        $($('body')[0]).append(region);
+        $($('body')[0]).append(miniElement);
 
         var scale = function() {
             return {
@@ -113,13 +116,15 @@ SOFTWARE.
         };
 
         var onResizeHandler = function(e) {
+            if(!shown) return;
+
             var s = scale();
             var sc = 'scale(' + s.x + ','+ s.y + ')';
             var offsetTop = $window.height() * settings.offsetHeightRatio;
 
             var offsetLeftRight = $window.width() * settings.offsetWidthRatio;
 
-            var top = minimap.height() * (s.y - 1) / 2 + offsetTop + ((minimap.offset().top)) * s.y;
+            var top = minimap.height() * (s.y - 1) / 2 + offsetTop;
             var leftRight = minimap.width() * (s.x - 1) / 2  + offsetLeftRight;
 
             var width = $window.width() * (1/s.x) * settings.widthRatio;
@@ -140,11 +145,12 @@ SOFTWARE.
 
             miniElement.css(css);
 
+            var regionTop = minimap.offset().top * s.y;
             var cssRegion = {
                 width : miniElement.width() * s.x,
                 height : $window.height() * s.y,
                 margin : '0px',
-                top : $window.scrollTop() * s.y + offsetTop - (minimap.offset().top - $body.offset().top) * s.y + 'px'
+                top : $window.scrollTop() * s.y + offsetTop - regionTop + 'px'
             };
             cssRegion[settings.position] = offsetLeftRight + 'px';
             region.css(cssRegion);
@@ -153,32 +159,35 @@ SOFTWARE.
         };
 
         var onScrollHandler = function(e) {
+            if(!shown) return;
+
             var s = scale();
             var offsetTop = $window.height() * settings.offsetHeightRatio;
+            var top = minimap.offset().top * s.y;
             var pos = ($window.scrollTop()) * s.y;
             var regionHeight = region.outerHeight(true);
             var bottom = minimap.outerHeight(true) * s.y + top;// - regionHeight;
 
-            console.log('window scrollTop ' + $window.scrollTop());
-
-            if(pos + regionHeight < top || pos >  bottom) {
+            if(pos + regionHeight + offsetTop < top || pos >  bottom) {
                 region.css({
                     display: 'none',
                 });
             } else {
                 region.css({
-                    top : pos + offsetTop - (minimap.offset().top - $body.offset().top) * s.y + 'px',
+                    top : pos + offsetTop - top + 'px',
                     display : 'block'
                 });
             }
         };
 
         var scrollTop = function(e) {
-            var s = scale();
-            var offset = $window.height() * settings.offsetHeightRatio;
-            var target = (e.clientY - offset) / s.y - (minimap.offset().top - $body.offset().top);
+            if(!shown) return;
 
-            console.log('scroll top : ' + target);
+            var s = scale();
+            var offsetTop = $window.height() * settings.offsetHeightRatio;
+            var top = minimap.offset().top * s.y;
+            var target = (e.clientY  - offsetTop + top) / s.y;
+
             if(e.type === 'click' && settings.smoothScroll) {
                 var current = $window.scrollTop();
                 var maxTarget = minimap.outerHeight(true);
@@ -312,18 +321,25 @@ SOFTWARE.
         };
 
         var show = function() {
+            if(shown) return;
             miniElement.show();
             region.show();
+            shown = true;
+            onResizeHandler();
         };
 
         var hide = function() {
+            if(!shown) return;
             miniElement.hide();
             region.hide();
+            shown = false;
         };
 
         var toggle = function() {
             miniElement.toggle();
             region.toggle();
+            shown = !shown;
+            if(shown) onResizeHandler();
         };
 
         return $.extend({}, this, {
