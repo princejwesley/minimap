@@ -140,6 +140,7 @@ SOFTWARE.
                 'width' : width,
                 'height' : height,
                 'margin' : '0px',
+                'padding' : '0px'
             };
             css[settings.position] = leftRight;
 

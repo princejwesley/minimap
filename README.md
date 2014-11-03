@@ -1,7 +1,7 @@
 [minimap](http://www.toolitup.com/minimap.html) - A jQuery Plugin
 ===============
-A preview of the full web page or its DOM element
-#####[Demo Page](http://www.toolitup.com/minimap.html) (TODO)
+A preview of full webpage or its DOM element with flexible positioning and navigation support
+#####[Demo Page](http://www.toolitup.com/minimap.html)
 
 ## Getting Started
 
@@ -50,7 +50,7 @@ var previewBody = $('body').minimap();
 > `touch` support. (default: *true*)
 
 ### smoothScroll
->linear `animation` support for scrolling. (dafault: *false*)
+>linear `animation` support for scrolling. (dafault: *true*)
 
 ### smoothScrollDelay
 > Smooth scroll delay in milliseconds. (default: 200ms)
@@ -104,7 +104,7 @@ var previewBody = $('body').minimap(
     offsetWidthRatio : 0.035,
     position : "right",
     touch: true,
-    smoothScroll: false,
+    smoothScroll: true,
     smoothScrollDelay: 200,
     onPreviewChange: function() {}
 });
