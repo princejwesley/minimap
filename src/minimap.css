@@ -26,6 +26,7 @@ SOFTWARE.
     z-index : 10000;
     position : fixed;
     cursor: pointer;
+    font-size: 1em;
 }
 
 .miniregion {
