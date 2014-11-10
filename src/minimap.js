@@ -156,7 +156,7 @@ SOFTWARE.
             cssRegion[settings.position] = offsetLeftRight + 'px';
             region.css(cssRegion);
 
-            settings.onPreviewChange();
+            settings.onPreviewChange(miniElement, s);
         };
 
         var onScrollHandler = function(e) {

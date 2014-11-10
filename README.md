@@ -78,12 +78,19 @@ var previewBody = $('body').minimap();
 > Set `setSmoothScrollDelay` property.
 
 ## Callback
-### function onPreviewChange()
+### function onPreviewChange(minimap, scale)
 > `onPreviewChange` callback will be triggered for the below cases:
 
 1. View port is resized.
 2. Calling setter functions.
 
+Use this function to *customize* DOMs inside minimap.
+
+Parameters:
+```
+minimap - $minimap DOM
+scale - Scale object with `x` and `y` properties.(width/height ratio of minimap with respect to viewport)
+```
 ## Other functions
 ### function show()
 > Show preview
@@ -106,7 +113,7 @@ var previewBody = $('body').minimap(
     touch: true,
     smoothScroll: true,
     smoothScrollDelay: 200,
-    onPreviewChange: function() {}
+    onPreviewChange: function(minimap, scale) {}
 });
 ```
 
