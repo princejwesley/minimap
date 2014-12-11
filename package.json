@@ -10,5 +10,11 @@
 		"grunt-postcss": "~0.1.0",
 		"grunt-contrib-cssmin" : "*",
 		"grunt-autoprefixer" : "*"
-	}
+	},
+	"keywords": [
+		"navigation",
+		"preview",
+		"minimap",
+		"mini-map"
+	]
 }
