@@ -2,6 +2,7 @@
 ===============
 A preview of full webpage or its DOM element with flexible positioning and navigation support
 #####[Demo Page](http://www.toolitup.com/minimap.html)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/princejwesley/minimap)
 
 ## Getting Started
 
