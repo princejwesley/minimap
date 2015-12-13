@@ -187,7 +187,8 @@ SOFTWARE.
             var s = scale();
             var offsetTop = $window.height() * settings.offsetHeightRatio;
             var top = minimap.offset().top * s.y;
-            var target = (e.clientY  - offsetTop + top) / s.y;
+            var regionHeight = region.outerHeight(true);
+            var target = (e.clientY - regionHeight/2 - offsetTop + top) / s.y;
 
             if(e.type === 'click' && settings.smoothScroll) {
                 var current = $window.scrollTop();
@@ -232,6 +233,7 @@ SOFTWARE.
         var onSmoothScroll = false;
         var onMouseupHandler = function(e) {
             mousedown = false;
+            minimap.removeClass('noselect');
         };
 
         var onMousemoveHandler = function(e) {
@@ -246,11 +248,15 @@ SOFTWARE.
 
         var onMousedownHandler = function(e) {
             mousedown = true;
+            minimap.addClass('noselect');
         };
 
         onResizeHandler();
         $window.on('resize', onResizeHandler);
         $window.on('scroll', onScrollHandler);
+
+        $(document).on('mouseup', onMouseupHandler);
+        $(document).on('mousemove', onMousemoveHandler);
 
         $(region).on('mousedown', onMousedownHandler);
         $(region).on('mouseup', onMouseupHandler);
