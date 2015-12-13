@@ -234,6 +234,7 @@ SOFTWARE.
         var onMouseupHandler = function(e) {
             mousedown = false;
             minimap.removeClass('noselect');
+            region.removeClass('dragging');
         };
 
         var onMousemoveHandler = function(e) {
@@ -249,6 +250,7 @@ SOFTWARE.
         var onMousedownHandler = function(e) {
             mousedown = true;
             minimap.addClass('noselect');
+            region.addClass('dragging');
         };
 
         onResizeHandler();
