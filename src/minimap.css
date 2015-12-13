@@ -36,6 +36,13 @@ SOFTWARE.
     border: 2px solid silver;
     border-radius: 10%;
     cursor: pointer;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+}
+
+.miniregion.dragging {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
 }
 
 .miniregion:hover {
