@@ -56,6 +56,9 @@ var previewBody = $('body').minimap();
 ### smoothScrollDelay
 > Smooth scroll delay in milliseconds. (default: 200ms)
 
+### disableFind
+> `disableFind` if true, prevents browser CTRL+F from finding duplicated text in minimap. (default: *false*)
+
 ## Setters
 ### function setPosition(position)
 > Set `position` property. `position` can be either `'left'` or `'right'`
@@ -114,7 +117,8 @@ var previewBody = $('body').minimap(
     touch: true,
     smoothScroll: true,
     smoothScrollDelay: 200,
-    onPreviewChange: function(minimap, scale) {}
+    onPreviewChange: function(minimap, scale) {},
+    disableFind : false
 });
 ```
 
@@ -125,8 +129,7 @@ Use the below css classes for customization
 > `.miniregion` - Mini-map view area
 
 ## Caveats
-1. Browser's `find` gives result in both the page & its preview
-2. Async updates to the dom elements after minimap was created may not reflect in the preview.
+1. Async updates to the dom elements after minimap was created may not reflect in the preview.
 
 ## License
 This plugin is licensed under the [MIT license](https://github.com/princejwesley/minimap/blob/master/LICENSE).
